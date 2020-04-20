@@ -1,86 +1,85 @@
 from enum import Enum
 import uuid
 
+
 class activestatus(Enum):
     deceased = 0
     alive = 1
 
+
 class person:
-    def __init__(self, firstname, lastname, dob,alive):
-        self.firstname = firstname
-        self.lastname = lastname
+    def __init__(self, first_name, last_name, dob):
+        self.first_name = first_name
+        self.last_name = last_name
         self.dob = dob
+        self.alive = activestatus.alive
+
+    def update_first_name(self, first_name):
+        self.first_name = first_name
+
+    def update_last_name(self, last_name):
+        self.last_name = last_name
+
+    def update_dob(self, dob):
+        self.dob = dob
+
+    def update_alive(self, alive):
         self.alive = alive
-
-    def update_first_name(self,student_record,student_id,vfname):
-        student_list = list(student_record)
-        student_list[student_id][0] = vfname
-        return tuple(student_list)
-
-
-    def update_last_name(self,student_record,student_id,vlname):
-        student_list = list(student_record)
-        student_list[student_id][1] = vlname
-        return tuple(student_list)
-
-    def update_dob(self,student_record,student_id,vdob):
-        student_list = list(student_record)
-        student_list[student_id][2] = vdob
-        return tuple(student_list)
-
-    def update_alive(self,student_record,student_id,valive):
-        student_list = list(student_record)
-        student_list[student_id][3] = valive
-        return tuple(student_list)
 
 
 class instructor(person):
-    def __init__(self):
-        self.instructor_id = 'Instructor_' + str(uuid.uuid4())
-        #super().__init__(firstname,lastname,dob,alive)      
-        
+    def __init__(self, first_name, last_name, dob):
+        person.__init__(self, first_name, last_name, dob)
+        self.instructor_id = f"Instructor_{uuid.uuid4()}"
+
 
 class student(person):
-    def __init__(self):
-        #super().__init__(frstname, lastname, dob, alive)
-        self.student_id = 'Student_' + str(uuid.uuid4())
+    def __init__(self, first_name, last_name, dob):
+        person.__init__(self, first_name, last_name, dob)
+        self.student_id = f"Student_{uuid.uuid4()}"
+
 
 class zipcodestudent(student):
-    pass
+    def __init__(self, first_name, last_name, dob):
+        student.__init__(first_name, last_name, dob)
+
 
 class prekstudent(student):
+    def __init__(self, first_name, last_name, dob):
+        student.__init__(first_name, last_name, dob)
+
+
+class gradebook:
     pass
 
+
 class classroom:
-    def __init__(self, students, instructors):
-        self.students = students
-        self.instructors = instructors
+    def __init__(self):
+        self.students = {}
+        self.instructors = {}
 
-    def add_instructor(self, instructid):
-        self.instructors.update({instructid: (self.instructors.firstname, self.instructors.lastname, self.instructors.dob, self.instructors.alive)})
+    def add_instructor(self, instructor):
+        self.instructors[instructor.instructor_id] = instructor
 
-    def remove_instructor(self, instructorid):
-        del self.instructors[instructorid]
+    def remove_instructor(self, instructor):
+        if instructor.instructor_id in self.instructors:
+            del self.instructors[instructor.instructor_id]
 
-    def add_student(self, studentid):
-        self.students.update({studentid: (self.students.firstname, self.students.lastname, self.students.dob, self.students.alive)})
+    def add_student(self, student):
+        self.students[student.student_id] = student
 
-    def remove_student(self, studentid):
-        del self.students[studentid]
+    def remove_student(self, student):
+        if student.student_id in self.students:
+            del self.students[student.student_id]
 
-    def print_instructors(self ):
-        for record in self.instructors:
-            print (record)
+    def print_instructors(self):
+        for key, value in self.instructors.items():
+            print(f"{key}: {value}")
 
     def print_students(self):
-        for record in self.students:
-            print (record)
-
-
-    
-c_instructor = instructor()
-c_student = student()
-c_classroom = classroom(c_student,c_instructor)
+        for key, value in self.students.items():
+            print(f"{key}: {value}")
 
 
 
+#
